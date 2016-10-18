@@ -103,7 +103,7 @@ router.get('/:shortAddress', function(req, res, next) {
 			if (doc) {
 				res.redirect(doc.longUrl);
 			} else {
-				var err = new Error('That address does not exist within the database. Please generate it first.');
+				var err = new Error('The address provided does not exist within the database. Please generate it first.');
 				err.status = 404; // Not Found
 				next(err);
 			}
