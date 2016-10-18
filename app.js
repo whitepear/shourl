@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
 
 var app = express();
 
@@ -19,6 +21,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var db; // storage var for database connection
+var shortCollection; // storage var for 'short' collection within db
+
+// Utilise connection pooling, initialise app after db connection
+// is established
+MongoClient.connect('mongodb://localhost:27017/shourl', function(err, database) {
+  if(err) throw err;
+
+  db = database;
+  shortCollection = db.collection('short');
+  app.listen(3000);
+  console.log('Listening on port 3000');
+});
+
+// make database connection available to routing middleware
+app.use(function(req, res, next) {
+  req.db = db;
+  next();
+});
 
 app.use('/', routes);
 
