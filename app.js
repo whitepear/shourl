@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var sanitizeHtml = require('sanitize-html');
 var routes = require('./routes/index');
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
@@ -39,6 +40,31 @@ MongoClient.connect('mongodb://localhost:27017/shourl', function(err, database) 
 // make database connection available to routing middleware
 app.use(function(req, res, next) {
   req.db = db;
+  next();
+});
+
+// sanitize param and query objects
+app.use(function(req, res, next) {
+  var paramKeys = Object.keys(req.params);
+  var queryKeys = Object.keys(req.query);
+  var escapedContent; // loop variable for storing escaped strings
+
+  paramKeys.forEach(function(key) {
+    escapedContent = sanitizeHtml(req.params[key], {
+      allowedTags: [],
+      allowedAttributes: []
+    });
+    req.params[key] = escapedContent.replace(/&quot;/g, '"');
+  });
+
+  queryKeys.forEach(function(key) {
+    escapedContent = sanitizeHtml(req.query[key], {
+      allowedTags: [],
+      allowedAttributes: []
+    });
+    req.query[key] = escapedContent.replace(/&quot;/g, '"');
+  });
+  
   next();
 });
 
