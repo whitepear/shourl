@@ -73,10 +73,10 @@ router.get('/', function(req, res, next) {
 							next(err);
 						} else {
 							console.log('Document successfully inserted.');
-							var generatedDoc = {};
-							generatedDoc.shortUrl = result.ops[0].shortUrl;
-							generatedDoc.longUrl = result.ops[0].longUrl;
-							res.send(generatedDoc);
+							var insertedDoc = {};
+							insertedDoc.shortUrl = urlObj.shortUrl;
+							insertedDoc.longUrl = urlObj.longUrl;
+							res.send(insertedDoc);
 						}	
 	  			});
 	  		}
