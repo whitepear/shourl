@@ -24,7 +24,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var db; // storage var for database connection
-var shortCollection; // storage var for 'short' collection within db
 
 // Utilise connection pooling, initialise app after db connection
 // is established
@@ -32,7 +31,6 @@ MongoClient.connect('mongodb://localhost:27017/shourl', function(err, database) 
   if(err) throw err;
 
   db = database;
-  shortCollection = db.collection('short');
   app.listen(3000);
   console.log('Listening on port 3000');
 });
@@ -64,7 +62,7 @@ app.use(function(req, res, next) {
     });
     req.query[key] = escapedContent.replace(/&quot;/g, '"');
   });
-  
+
   next();
 });
 
