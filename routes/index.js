@@ -3,6 +3,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	// this route serves the index view, in addition to generating
+	// shortened URLs (dependent on the presence of a query string variable)
+
 	var longUrl = req.query.new;
 
 	if (longUrl) {
@@ -86,7 +89,26 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:shortAddress', function(req, res, next) {
-	
+	// this route redirects users to the site referenced by their 
+	// shortened URL code
+
+	var shortUrl = 'http://localhost:3000/' + req.params.shortAddress;
+	// var shortUrl = 'https://shourl.herokuapp.com/' + req.params.shortAddress;
+	req.db.collection('short').findOne({ shortUrl: shortUrl }, function(err, doc) {
+		if (err) {
+			var err = new Error('An error occurred while retrieving the document from database.');
+			err.status = 500; // internal server error
+			next(err);
+		} else {
+			if (doc) {
+				res.redirect(doc.longUrl);
+			} else {
+				var err = new Error('That address does not exist within the database. Please generate it first.');
+				err.status = 404; // Not Found
+				next(err);
+			}
+		}
+	})
 });
 
 
