@@ -1,9 +1,7 @@
 Project is live at: https://shourl.herokuapp.com/   
-This is a revamped and improved version of the app, which previously had issues when deployed to Heroku.
 
-FreeCodeCamp coursework: https://www.freecodecamp.com/challenges/url-shortener-microservice  
+An Express API that converts a URL passed as a query string parameter into a shortened version of the address. Using the new, shortened address will redirect the browser to the address originally provided.
 
-Here are the specific user stories you should implement for this project:  
-User Story: I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.  
-User Story: If I pass an invalid URL that doesn't follow the valid http://www.example.com format, the JSON response will contain an error instead.  
-User Story: When I visit that shortened URL, it will redirect me to my original link.  
+The application consists of two GET routes, one of which handles URL-shortening, whilst the other manages browser redirection. The application interfaces with a single MongoDB collection in order to store URLs with their associated shortened version. API responses are in JSON format, and the application will only accept validly-formatted URLs for shortening.
+
+Note: The live application (linked above) is hosted on Heroku. Please allow a few seconds for the hosting server to wake up when attempting to view it.
